@@ -75,13 +75,13 @@
         border-radius: 50%;
         background: var(--idle);
       }
-      body[data-recording="true"] #dot {
+      body[data-status="recording"] #dot {
         background: var(--rec);
         animation: pulse 1.6s ease-in-out infinite;
       }
       @keyframes pulse { 50% { opacity: 0.35; } }
       @media (prefers-reduced-motion: reduce) {
-        body[data-recording="true"] #dot { animation: none; }
+        body[data-status="recording"] #dot { animation: none; }
       }
       #status { margin: 0; font-weight: 500; }
 
@@ -103,6 +103,7 @@
         transition: box-shadow 0.15s, background-color 0.15s, filter 0.15s;
       }
       .btn svg { flex: none; width: 18px; height: 18px; fill: currentColor; }
+      .btn:disabled { opacity: 0.38; cursor: default; pointer-events: none; }
       .btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
 
       .btn.filled { background: var(--primary); color: var(--on-primary); }
@@ -110,13 +111,13 @@
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px 1px rgba(0, 0, 0, 0.15);
         filter: brightness(0.94);
       }
-      body[data-recording="true"] .btn.filled { background: var(--danger); color: var(--on-danger); }
+      body[data-status="recording"] .btn.filled { background: var(--danger); color: var(--on-danger); }
 
       .btn.outlined { background: transparent; border-color: var(--outline); color: var(--primary); }
       .btn.outlined:hover { background: var(--state-layer); }
 
-      body:not([data-recording="true"]) .icon-stop,
-      body[data-recording="true"] .icon-start,
+      body:not([data-status="recording"]) .icon-stop,
+      body[data-status="recording"] .icon-start,
       body:not([data-hear="true"]) .icon-volume-up,
       body[data-hear="true"] .icon-volume-off { display: none; }
 
@@ -127,7 +128,7 @@
   </head>
   <body>
     <header>
-      <img src="icons/icon48.png" alt="">
+      <img src="../../icons/icon48.png" alt="">
       <h1>Tab Audio Recorder</h1>
     </header>
     <main>
@@ -148,6 +149,6 @@
       <p id="error"></p>
       <p id="hint">Muting only changes what you hear. The recording always gets the full audio.</p>
     </main>
-    <script src="popup.js"></script>
+    <script type="module" src="popup.js"></script>
   </body>
 </html>
