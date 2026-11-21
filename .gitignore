@@ -1,0 +1,13 @@
+# macOS
+.DS_Store
+
+# Packaged extension and its private signing key
+*.crx
+*.pem
+*.zip
+
+# Editors
+.idea/
+.vscode/
+
+node_modules/

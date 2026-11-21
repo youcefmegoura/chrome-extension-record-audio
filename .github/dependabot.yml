@@ -1,0 +1,10 @@
+# The project has no package dependencies; only the GitHub Actions used by
+# the workflows need to be kept up to date.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: ci
