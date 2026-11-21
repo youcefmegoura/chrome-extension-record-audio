@@ -14,8 +14,15 @@ function render(next) {
   statusEl.textContent = state.recording
     ? `Recording (${state.hear ? 'you can hear it' : 'muted'})`
     : 'Not recording';
-  recBtn.textContent = state.recording ? 'Stop and save file' : 'Start recording this tab';
-  hearBtn.textContent = state.hear ? 'Mute (keep recording)' : 'Unmute (hear it)';
+  // The icons in each button are swapped in CSS from these two attributes.
+  document.body.dataset.recording = String(Boolean(state.recording));
+  document.body.dataset.hear = String(Boolean(state.hear));
+  recBtn.querySelector('.label').textContent = state.recording
+    ? 'Stop and save file'
+    : 'Start recording this tab';
+  hearBtn.querySelector('.label').textContent = state.hear
+    ? 'Mute (keep recording)'
+    : 'Unmute (hear it)';
   errorEl.textContent = state.error || '';
 }
 

@@ -32,7 +32,7 @@ async function updateBadge() {
   const { recording, hear } = await getState();
   chrome.action.setBadgeText({ text: recording ? 'REC' : '' });
   // Red while recording silently, green while recording and listening.
-  chrome.action.setBadgeBackgroundColor({ color: hear ? '#1a7f37' : '#d00000' });
+  chrome.action.setBadgeBackgroundColor({ color: hear ? '#188038' : '#d93025' });
 }
 
 async function start(tabId) {
