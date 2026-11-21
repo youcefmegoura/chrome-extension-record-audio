@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Tab Audio Recorder</title>
+    <style>
+      body { width: 230px; margin: 0; padding: 12px; font: 13px system-ui, sans-serif; }
+      button { width: 100%; padding: 8px; margin-bottom: 8px; font: inherit; cursor: pointer; }
+      #status { margin: 0 0 10px; font-weight: 600; }
+      #error { margin: 0; color: #b00020; }
+      #hint { margin: 0; color: #666; font-size: 11px; }
+    </style>
+  </head>
+  <body>
+    <p id="status">Loading…</p>
+    <button id="rec"></button>
+    <button id="hear"></button>
+    <p id="error"></p>
+    <p id="hint">Muting only changes what you hear. The recording always gets the full audio.</p>
+    <script src="popup.js"></script>
+  </body>
+</html>
