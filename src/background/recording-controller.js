@@ -118,9 +118,12 @@ async function applyAutoStop(seconds) {
   await autoStopPreference.set(seconds);
 }
 
-function buildFilename(date) {
-  const stamp = date.toISOString().replace(/[:.]/g, '-').slice(0, 19);
-  return `tab-audio-${stamp}.m4a`;
+/** Names the file after the local time at which the recording was saved. */
+export function buildFilename(date) {
+  const pad = (value) => String(value).padStart(2, '0');
+  const day = [date.getFullYear(), date.getMonth() + 1, date.getDate()].map(pad).join('-');
+  const time = [date.getHours(), date.getMinutes(), date.getSeconds()].map(pad).join('-');
+  return `tab-audio-${day}T${time}.m4a`;
 }
 
 /** Ends the session once the download can no longer need the recorded data. */

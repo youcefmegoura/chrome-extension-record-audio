@@ -36,7 +36,7 @@ Chrome 126 or later.
    shortcut, to choose whether you hear the tab. A new recording starts muted
    unless you unmuted last time.
 4. Click **Stop and save file**. The recording is downloaded as
-   `tab-audio-<date>T<time>.m4a` in your downloads folder.
+   `tab-audio-<date>T<time>.m4a` (local time) in your downloads folder.
 
 While a recording is running, the popup shows a **Stop automatically** card.
 Set a duration in hours, minutes and seconds (30 seconds to 23 h 59 min 59 s)
