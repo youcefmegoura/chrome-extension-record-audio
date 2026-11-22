@@ -95,6 +95,7 @@ src/
   offscreen/tab-audio-recorder.js      capture, monitoring and recording
   popup/                               popup markup, styles and script
 scripts/validate.mjs                   checks run in CI
+tests/                                 unit tests, run against a fake chrome API
 ```
 
 ## Permissions
@@ -113,11 +114,16 @@ scripts/validate.mjs                   checks run in CI
 There is nothing to install or build. After editing the sources, click the
 reload button of the extension in `chrome://extensions`.
 
-Run the same checks as the CI (requires Node.js):
+Run the same checks as the CI (requires Node.js 22.7 or later):
 
 ```sh
 node scripts/validate.mjs
+node --test
 ```
+
+The tests use the test runner built into Node.js, so there is still nothing to
+install. They cover the service worker logic and the messaging helpers; the
+capture itself needs a real browser and is tested by hand.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for how to propose changes.
 

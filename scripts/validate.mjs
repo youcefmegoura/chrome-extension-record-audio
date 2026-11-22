@@ -10,7 +10,7 @@ import { dirname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
-const SOURCE_DIRS = ['src', 'scripts'];
+const SOURCE_DIRS = ['src', 'scripts', 'tests'];
 const errors = [];
 
 function manifestFiles(manifest) {

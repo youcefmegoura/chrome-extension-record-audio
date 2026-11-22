@@ -19,10 +19,12 @@ Open an issue and include:
    **Developer mode** > **Load unpacked**. Reload it there after each change.
 3. Test by hand: start a recording, mute and unmute, stop, and check that the
    saved file plays. Also try closing the tab while recording.
-4. Run the checks:
+4. Run the checks, and add or update tests in `tests/` for the logic you
+   change:
 
    ```sh
    node scripts/validate.mjs
+   node --test
    ```
 
 5. Open a pull request that explains what changes and why.

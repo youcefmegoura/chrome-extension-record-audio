@@ -14,7 +14,7 @@ concurrency:
 
 jobs:
   validate:
-    name: Validate manifest and sources
+    name: Validate and test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -22,3 +22,4 @@ jobs:
         with:
           node-version: lts/*
       - run: node scripts/validate.mjs
+      - run: node --test
