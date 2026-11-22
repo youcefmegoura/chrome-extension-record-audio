@@ -2,6 +2,8 @@
 // worker is suspended after about 30 seconds of inactivity.
 
 const HEAR_KEY = 'hear';
+const AUTO_STOP_SECONDS_KEY = 'autoStopSeconds';
+const DEFAULT_AUTO_STOP_SECONDS = 60 * 60;
 const SAVE_KEYS = ['saving', 'downloadId'];
 
 /** Whether the user wants to hear the tab while it is recorded. */
@@ -12,6 +14,18 @@ export const hearPreference = {
   },
   set(hear) {
     return chrome.storage.local.set({ [HEAR_KEY]: hear });
+  },
+};
+
+/** The duration the user last chose for the automatic stop, in seconds. */
+export const autoStopPreference = {
+  async get() {
+    const { [AUTO_STOP_SECONDS_KEY]: seconds = DEFAULT_AUTO_STOP_SECONDS } =
+      await chrome.storage.local.get(AUTO_STOP_SECONDS_KEY);
+    return seconds;
+  },
+  set(seconds) {
+    return chrome.storage.local.set({ [AUTO_STOP_SECONDS_KEY]: seconds });
   },
 };
 

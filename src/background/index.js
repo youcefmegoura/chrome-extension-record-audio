@@ -3,6 +3,7 @@
 // workers have no access to MediaRecorder.
 
 import { MessageType, Target, listen } from '../shared/messages.js';
+import { isAutoStopAlarm } from './auto-stop.js';
 import * as controller from './recording-controller.js';
 
 const TOGGLE_HEAR_COMMAND = 'toggle-hear';
@@ -12,6 +13,8 @@ listen(Target.BACKGROUND, {
   [MessageType.START]: ({ tabId }) => controller.start(tabId),
   [MessageType.STOP]: () => controller.stop(),
   [MessageType.SET_HEAR]: ({ hear }) => controller.setHear(hear),
+  [MessageType.SET_AUTO_STOP]: ({ seconds }) => controller.setAutoStop(seconds),
+  [MessageType.CANCEL_AUTO_STOP]: () => controller.cancelAutoStop(),
   [MessageType.RECORDING_READY]: ({ url }) => controller.handleRecordingReady(url),
   [MessageType.RECORDING_FAILED]: ({ message }) =>
     controller.handleRecordingFailed(message),
@@ -19,6 +22,10 @@ listen(Target.BACKGROUND, {
 
 chrome.commands.onCommand.addListener((command) => {
   if (command === TOGGLE_HEAR_COMMAND) controller.toggleHear();
+});
+
+chrome.alarms.onAlarm.addListener((alarm) => {
+  if (isAutoStopAlarm(alarm)) controller.stop();
 });
 
 chrome.downloads.onChanged.addListener(controller.handleDownloadChanged);

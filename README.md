@@ -13,6 +13,8 @@ gets the full audio.
   `chrome://extensions/shortcuts`).
 - Toolbar badge while recording: green when you can hear the tab, red when it
   is muted.
+- Automatic stop: end and save the recording after a duration you choose
+  (hours, minutes and seconds), with a live countdown.
 - Saves the file automatically if the recorded tab is closed.
 - No build step, no dependencies, no data leaves your computer.
 
@@ -36,6 +38,13 @@ Chrome 126 or later.
 4. Click **Stop and save file**. The recording is downloaded as
    `tab-audio-<date>T<time>.m4a` in your downloads folder.
 
+While a recording is running, the popup shows a **Stop automatically** card.
+Set a duration in hours, minutes and seconds (30 seconds to 23 h 59 min 59 s)
+and click **Schedule**: the recording stops and is saved after that duration,
+counted from the click. The fields then lock and count down, and the button
+becomes **Cancel**, which removes the timer and keeps recording. The popup can
+stay closed: the recording is stopped and saved in the background.
+
 Chrome cannot capture its own pages (`chrome://...`, the Web Store); starting a
 recording there shows an error.
 
@@ -57,7 +66,10 @@ in an [offscreen document](https://developer.chrome.com/docs/extensions/referenc
 
 The service worker keeps no state in memory, because Chrome suspends it when
 idle. The existence of the offscreen document tells whether a recording is in
-progress; the rest is in `chrome.storage`.
+progress; the rest is in `chrome.storage`. For the same reason, the automatic
+stop is a
+[`chrome.alarms`](https://developer.chrome.com/docs/extensions/reference/api/alarms)
+alarm rather than a timer in the worker.
 
 ## Project structure
 
@@ -69,6 +81,7 @@ src/
   background/index.js                  service worker entry point
   background/recording-controller.js   workflow: idle -> recording -> saving -> idle
   background/offscreen-document.js     offscreen document lifecycle
+  background/auto-stop.js              automatic stop timer
   background/storage.js                persisted state
   background/badge.js                  toolbar badge
   offscreen/offscreen.js               offscreen document entry point
@@ -85,7 +98,8 @@ scripts/validate.mjs                   checks run in CI
 | `activeTab`  | Allow capturing the tab on which you opened the popup.        |
 | `offscreen`  | Create the hidden document that runs the recorder.            |
 | `downloads`  | Save the recording to your downloads folder.                  |
-| `storage`    | Remember the mute preference and the state of a pending save. |
+| `storage`    | Remember your preferences and the state of a pending save.    |
+| `alarms`     | Stop the recording at the scheduled time.                     |
 
 ## Development
 

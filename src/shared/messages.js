@@ -14,6 +14,8 @@ export const MessageType = Object.freeze({
   START: 'start',
   STOP: 'stop',
   SET_HEAR: 'set-hear',
+  SET_AUTO_STOP: 'set-auto-stop',
+  CANCEL_AUTO_STOP: 'cancel-auto-stop',
   // background -> offscreen
   START_CAPTURE: 'start-capture',
   STOP_CAPTURE: 'stop-capture',

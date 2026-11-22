@@ -12,9 +12,10 @@ import {
   notify,
   send,
 } from '../shared/messages.js';
+import * as autoStop from './auto-stop.js';
 import { renderBadge } from './badge.js';
 import * as offscreenDocument from './offscreen-document.js';
-import { hearPreference, saveSession } from './storage.js';
+import { autoStopPreference, hearPreference, saveSession } from './storage.js';
 
 const SETTLED_DOWNLOAD_STATES = ['complete', 'interrupted'];
 
@@ -28,13 +29,19 @@ function exclusive(task) {
 }
 
 async function readState() {
-  const [sessionActive, { saving }, hear] = await Promise.all([
-    offscreenDocument.exists(),
-    saveSession.get(),
-    hearPreference.get(),
-  ]);
-  if (!sessionActive) return { status: Status.IDLE, hear };
-  return { status: saving ? Status.SAVING : Status.RECORDING, hear };
+  const [sessionActive, { saving }, hear, autoStopSeconds, stopAt] =
+    await Promise.all([
+      offscreenDocument.exists(),
+      saveSession.get(),
+      hearPreference.get(),
+      autoStopPreference.get(),
+      autoStop.scheduledTime(),
+    ]);
+  const preferences = { hear, autoStopSeconds };
+  if (!sessionActive) return { status: Status.IDLE, ...preferences };
+  if (saving) return { status: Status.SAVING, ...preferences };
+  // `stopAt` is when the recording will stop by itself, or null.
+  return { status: Status.RECORDING, ...preferences, stopAt };
 }
 
 async function publish(error) {
@@ -64,12 +71,15 @@ async function command(type, payload) {
 }
 
 async function endSession() {
+  await autoStop.cancel();
   await saveSession.clear();
   await offscreenDocument.close();
 }
 
 async function startRecording(tabId) {
   if (await offscreenDocument.exists()) return; // already recording or saving
+  // Alarms can outlive the browser session that created them.
+  await autoStop.cancel();
   await saveSession.clear();
   const streamId = await chrome.tabCapture.getMediaStreamId({ targetTabId: tabId });
   await offscreenDocument.create();
@@ -84,9 +94,11 @@ async function startRecording(tabId) {
   }
 }
 
+// Reached from the popup and from the automatic stop alarm.
 async function stopRecording() {
   const { status } = await readState();
   if (status !== Status.RECORDING) return;
+  await autoStop.cancel();
   await saveSession.begin();
   await command(MessageType.STOP_CAPTURE);
 }
@@ -97,6 +109,13 @@ async function applyHear(hear) {
   if (await offscreenDocument.exists()) {
     await command(MessageType.SET_MONITOR, { hear });
   }
+}
+
+async function applyAutoStop(seconds) {
+  const { status } = await readState();
+  if (status !== Status.RECORDING) return;
+  await autoStop.schedule(seconds);
+  await autoStopPreference.set(seconds);
 }
 
 function buildFilename(date) {
@@ -136,6 +155,8 @@ export const getState = () => execute(() => {});
 export const start = (tabId) => execute(() => startRecording(tabId));
 export const stop = () => execute(stopRecording);
 export const setHear = (hear) => execute(() => applyHear(hear));
+export const setAutoStop = (seconds) => execute(() => applyAutoStop(seconds));
+export const cancelAutoStop = () => execute(() => autoStop.cancel());
 export const toggleHear = () =>
   execute(async () => applyHear(!(await hearPreference.get())));
 export const handleRecordingReady = (url) => execute(() => saveRecording(url));
