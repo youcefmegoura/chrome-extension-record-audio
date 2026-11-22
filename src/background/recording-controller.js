@@ -101,7 +101,7 @@ async function applyHear(hear) {
 
 function buildFilename(date) {
   const stamp = date.toISOString().replace(/[:.]/g, '-').slice(0, 19);
-  return `tab-audio-${stamp}.webm`;
+  return `tab-audio-${stamp}.m4a`;
 }
 
 /** Ends the session once the download can no longer need the recorded data. */

@@ -1,9 +1,9 @@
 {
   "manifest_version": 3,
   "name": "Tab Audio Recorder",
-  "version": "1.1",
-  "description": "Record the current tab's audio to a .webm file, and mute or unmute what you hear at any time without affecting the recording.",
-  "minimum_chrome_version": "116",
+  "version": "1.2",
+  "description": "Record the current tab's audio to a .m4a file, and mute or unmute what you hear at any time without affecting the recording.",
+  "minimum_chrome_version": "126",
   "permissions": ["tabCapture", "offscreen", "downloads", "activeTab", "storage"],
   "background": { "service_worker": "src/background/index.js", "type": "module" },
   "icons": {

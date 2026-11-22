@@ -5,9 +5,12 @@
 // gain 0 = silent. The recorder reads the stream directly, so the recording
 // is identical whichever way the gain is set.
 
-const MIME_TYPE = 'audio/webm;codecs=opus';
-const CONTAINER_TYPE = 'audio/webm';
-const AUDIO_BITS_PER_SECOND = 192_000;
+// AAC-LC in an MP4 container, saved as .m4a. Chrome can record it since
+// version 126, provided the platform ships an AAC encoder.
+const MIME_TYPE = 'audio/mp4;codecs=mp4a.40.2';
+const CONTAINER_TYPE = 'audio/mp4';
+// Favors small files; fine for speech, audibly lossy for music.
+const AUDIO_BITS_PER_SECOND = 64_000;
 const CHUNK_INTERVAL_MS = 1000;
 
 export class TabAudioRecorder {
@@ -33,6 +36,9 @@ export class TabAudioRecorder {
 
   async start(streamId, hear) {
     if (this.#recorder) throw new Error('A recording is already in progress.');
+    if (!MediaRecorder.isTypeSupported(MIME_TYPE)) {
+      throw new Error('This browser cannot record .m4a (AAC) audio.');
+    }
     try {
       this.#stream = await navigator.mediaDevices.getUserMedia({
         audio: {

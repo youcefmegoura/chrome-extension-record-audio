@@ -1,12 +1,12 @@
 # Tab Audio Recorder
 
-A Chrome extension that records the audio of the current tab to a `.webm`
+A Chrome extension that records the audio of the current tab to a `.m4a`
 file. You can mute or unmute what you hear at any time: the recording always
 gets the full audio.
 
 ## Features
 
-- Records the current tab's audio (Opus in WebM, 192 kbit/s).
+- Records the current tab's audio (AAC in MP4, 64 kbit/s).
 - Listening is independent from recording: mute the tab for yourself while it
   keeps being recorded.
 - Keyboard shortcut to mute or unmute: `Alt+Shift+M` (editable in
@@ -19,7 +19,7 @@ gets the full audio.
 ## Install
 
 The extension is not on the Chrome Web Store; load it from source. It needs
-Chrome 116 or later.
+Chrome 126 or later.
 
 1. Clone or download this repository.
 2. Open `chrome://extensions`.
@@ -34,7 +34,7 @@ Chrome 116 or later.
    shortcut, to choose whether you hear the tab. A new recording starts muted
    unless you unmuted last time.
 4. Click **Stop and save file**. The recording is downloaded as
-   `tab-audio-<date>T<time>.webm` in your downloads folder.
+   `tab-audio-<date>T<time>.m4a` in your downloads folder.
 
 Chrome cannot capture its own pages (`chrome://...`, the Web Store); starting a
 recording there shows an error.
