@@ -4,6 +4,8 @@ A Chrome extension that records the audio of the current tab to a `.m4a`
 file. You can mute or unmute what you hear at any time: the recording always
 gets the full audio.
 
+[![Download for Chrome](https://img.shields.io/github/v/release/youcefmegoura/chrome-extension-record-audio?label=Download%20for%20Chrome&logo=googlechrome&logoColor=white&color=0b57d0&style=for-the-badge)](https://github.com/youcefmegoura/chrome-extension-record-audio/releases/latest/download/tab-audio-recorder.zip)
+
 ## Features
 
 - Records the current tab's audio (AAC in MP4, 64 kbit/s).
@@ -22,13 +24,21 @@ gets the full audio.
 
 ## Install
 
-The extension is not on the Chrome Web Store; load it from source. It needs
-Chrome 126 or later.
+The extension is not on the Chrome Web Store, so Chrome does not install it
+in one click. It needs Chrome 126 or later.
 
-1. Clone or download this repository.
+1. [Download the latest version](https://github.com/youcefmegoura/chrome-extension-record-audio/releases/latest/download/tab-audio-recorder.zip)
+   and unzip it. Keep the `tab-audio-recorder` folder somewhere permanent:
+   Chrome loads the extension from it every time it starts.
 2. Open `chrome://extensions`.
 3. Turn on **Developer mode** (top right).
-4. Click **Load unpacked** and select the repository folder.
+4. Click **Load unpacked** and select the `tab-audio-recorder` folder.
+5. Pin the extension to the toolbar (puzzle icon > pin) to see its badge.
+
+To update, download the latest version again, replace the contents of the
+folder, and click the reload button of the extension in `chrome://extensions`.
+Earlier versions are on the
+[releases page](https://github.com/youcefmegoura/chrome-extension-record-audio/releases).
 
 ## Usage
 
@@ -77,27 +87,6 @@ A second alarm watches every save: if the recording is not handed over or its
 download never settles, the session is ended and the failure is reported,
 instead of leaving the extension stuck in the saving state.
 
-## Project structure
-
-```
-manifest.json
-icons/
-src/
-  shared/messages.js                   message names, statuses, messaging helpers
-  background/index.js                  service worker entry point
-  background/recording-controller.js   workflow: idle -> recording -> saving -> idle
-  background/offscreen-document.js     offscreen document lifecycle
-  background/auto-stop.js              automatic stop timer
-  background/save-watchdog.js          timer that ends a save that never completes
-  background/storage.js                persisted state
-  background/badge.js                  toolbar badge
-  offscreen/offscreen.js               offscreen document entry point
-  offscreen/tab-audio-recorder.js      capture, monitoring and recording
-  popup/                               popup markup, styles and script
-scripts/validate.mjs                   checks run in CI
-tests/                                 unit tests, run against a fake chrome API
-```
-
 ## Permissions
 
 | Permission   | Why it is needed                                              |
@@ -109,23 +98,9 @@ tests/                                 unit tests, run against a fake chrome API
 | `storage`    | Remember your preferences and the state of a pending save.    |
 | `alarms`     | Stop the recording at the scheduled time.                     |
 
-## Development
-
-There is nothing to install or build. After editing the sources, click the
-reload button of the extension in `chrome://extensions`.
-
-Run the same checks as the CI (requires Node.js 22.7 or later):
-
-```sh
-node scripts/validate.mjs
-node --test
-```
-
-The tests use the test runner built into Node.js, so there is still nothing to
-install. They cover the service worker logic and the messaging helpers; the
-capture itself needs a real browser and is tested by hand.
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for how to propose changes.
+The [release workflow](.github/workflows/release.yml) runs the checks, packages
+the extension and publishes it as a GitHub release, which the download button
+at the top of this page then serves.
 
 ## License
 
