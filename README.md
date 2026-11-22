@@ -98,10 +98,6 @@ instead of leaving the extension stuck in the saving state.
 | `storage`    | Remember your preferences and the state of a pending save.    |
 | `alarms`     | Stop the recording at the scheduled time.                     |
 
-The [release workflow](.github/workflows/release.yml) runs the checks, packages
-the extension and publishes it as a GitHub release, which the download button
-at the top of this page then serves.
-
 ## License
 
 Licensed under the [Apache License 2.0](LICENSE). See [NOTICE](NOTICE).

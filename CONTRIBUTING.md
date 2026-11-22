@@ -33,8 +33,7 @@ Open an issue and include:
 
 - Keep the project free of dependencies and of any build step.
 - Write code, comments and documentation in English.
-- One responsibility per module; see the project structure in the
-  [README](README.md). Message names and statuses belong in
+- One responsibility per module. Message names and statuses belong in
   `src/shared/messages.js`.
 - Keep no state in service worker variables: Chrome suspends the worker when
   idle. Use `chrome.storage` instead.
