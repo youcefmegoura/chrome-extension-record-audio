@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <title>Tab Audio Recorder</title>
@@ -13,7 +13,7 @@
     <main>
       <div id="status-row">
         <span id="dot"></span>
-        <p id="status">Loading…</p>
+        <p id="status" role="status">Loading…</p>
       </div>
       <button id="rec" class="btn filled">
         <svg class="icon-start" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="7"/></svg>
@@ -40,7 +40,7 @@
         </form>
         <p id="schedule-note">Stops and saves at <time id="stop-time"></time></p>
       </section>
-      <p id="error"></p>
+      <p id="error" role="alert"></p>
       <p id="hint">Muting only changes what you hear. The recording always gets the full audio.</p>
     </main>
     <script type="module" src="popup.js"></script>
