@@ -5,6 +5,7 @@
 import { MessageType, Target, listen } from '../shared/messages.js';
 import { isAutoStopAlarm } from './auto-stop.js';
 import * as controller from './recording-controller.js';
+import { isSaveWatchdogAlarm } from './save-watchdog.js';
 
 const TOGGLE_HEAR_COMMAND = 'toggle-hear';
 
@@ -25,7 +26,8 @@ chrome.commands.onCommand.addListener((command) => {
 });
 
 chrome.alarms.onAlarm.addListener((alarm) => {
-  if (isAutoStopAlarm(alarm)) controller.stop();
+  if (isAutoStopAlarm(alarm)) controller.handleAutoStopAlarm();
+  if (isSaveWatchdogAlarm(alarm)) controller.handleSaveWatchdogAlarm();
 });
 
 chrome.downloads.onChanged.addListener(controller.handleDownloadChanged);

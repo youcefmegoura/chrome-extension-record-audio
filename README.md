@@ -16,6 +16,8 @@ gets the full audio.
 - Automatic stop: end and save the recording after a duration you choose
   (hours, minutes and seconds), with a live countdown.
 - Saves the file automatically if the recorded tab is closed.
+- If a recording cannot be saved, the toolbar badge shows `!` and the popup
+  says why the next time you open it.
 - No build step, no dependencies, no data leaves your computer.
 
 ## Install
@@ -71,6 +73,10 @@ stop is a
 [`chrome.alarms`](https://developer.chrome.com/docs/extensions/reference/api/alarms)
 alarm rather than a timer in the worker.
 
+A second alarm watches every save: if the recording is not handed over or its
+download never settles, the session is ended and the failure is reported,
+instead of leaving the extension stuck in the saving state.
+
 ## Project structure
 
 ```
@@ -82,6 +88,7 @@ src/
   background/recording-controller.js   workflow: idle -> recording -> saving -> idle
   background/offscreen-document.js     offscreen document lifecycle
   background/auto-stop.js              automatic stop timer
+  background/save-watchdog.js          timer that ends a save that never completes
   background/storage.js                persisted state
   background/badge.js                  toolbar badge
   offscreen/offscreen.js               offscreen document entry point
