@@ -1,0 +1,206 @@
+:root {
+  color-scheme: light dark;
+  --surface: #fff;
+  --text: #1f1f1f;
+  --text-secondary: #474747;
+  --divider: #e1e3e1;
+  --primary: #0b57d0;
+  --on-primary: #fff;
+  --outline: #747775;
+  --danger: #b3261e;
+  --on-danger: #fff;
+  --chip: #f0f4f9;
+  --rec: #d93025;
+  --idle: #747775;
+  --state-layer: rgba(11, 87, 208, 0.08);
+  --tonal: #d3e3fd;
+  --on-tonal: #041e49;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --surface: #1f1f1f;
+    --text: #e3e3e3;
+    --text-secondary: #c7c7c7;
+    --divider: #3c3c3c;
+    --primary: #a8c7fa;
+    --on-primary: #062e6f;
+    --outline: #8e918f;
+    --danger: #f2b8b5;
+    --on-danger: #601410;
+    --chip: #282a2c;
+    --rec: #f28b82;
+    --idle: #8e918f;
+    --state-layer: rgba(168, 199, 250, 0.12);
+    --tonal: #004a77;
+    --on-tonal: #c2e7ff;
+  }
+}
+
+body {
+  width: 300px;
+  margin: 0;
+  background: var(--surface);
+  color: var(--text);
+  font: 13px/20px "Google Sans Text", "Google Sans", Roboto, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--divider);
+}
+header img { width: 20px; height: 20px; }
+header h1 { margin: 0; font-size: 14px; line-height: 20px; font-weight: 500; }
+
+main { padding: 16px; }
+
+#status-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--chip);
+}
+#dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--idle);
+}
+body[data-status="recording"] #dot {
+  background: var(--rec);
+  animation: pulse 1.6s ease-in-out infinite;
+}
+@keyframes pulse { 50% { opacity: 0.35; } }
+@media (prefers-reduced-motion: reduce) {
+  body[data-status="recording"] #dot { animation: none; }
+}
+#status { margin: 0; font-weight: 500; }
+
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-sizing: border-box;
+  width: 100%;
+  height: 36px;
+  margin-bottom: 8px;
+  padding: 0 16px;
+  border: 1px solid transparent;
+  border-radius: 100px;
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  transition: box-shadow 0.15s, background-color 0.15s, filter 0.15s;
+}
+.btn svg { flex: none; width: 18px; height: 18px; fill: currentColor; }
+.btn:disabled { opacity: 0.38; cursor: default; pointer-events: none; }
+.btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+.btn.filled { background: var(--primary); color: var(--on-primary); }
+.btn.filled:hover {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px 1px rgba(0, 0, 0, 0.15);
+  filter: brightness(0.94);
+}
+body[data-status="recording"] .btn.filled { background: var(--danger); color: var(--on-danger); }
+
+.btn.outlined { background: transparent; border-color: var(--outline); color: var(--primary); }
+.btn.outlined:hover { background: var(--state-layer); }
+
+body:not([data-status="recording"]) .icon-stop,
+body[data-status="recording"] .icon-start,
+body:not([data-hear="true"]) .icon-volume-up,
+body[data-hear="true"] .icon-volume-off { display: none; }
+
+/* Automatic stop: a card shown only while recording. */
+#schedule {
+  margin-top: 8px;
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--chip);
+}
+body:not([data-status="recording"]) #schedule { display: none; }
+
+#schedule h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+  font-size: 13px;
+  line-height: 20px;
+  font-weight: 500;
+}
+#schedule h2 svg { flex: none; width: 18px; height: 18px; fill: var(--text-secondary); }
+
+#duration { display: flex; gap: 8px; margin-bottom: 12px; }
+.field {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  color: var(--text-secondary);
+}
+.field input {
+  box-sizing: border-box;
+  flex: 1;
+  min-width: 0;
+  height: 32px;
+  padding: 0 4px;
+  border: 1px solid var(--outline);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+.field input:hover { border-color: var(--text); }
+.field input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: inset 0 0 0 1px var(--primary);
+}
+/* While the stop is scheduled the fields are a read-only countdown. */
+.field input:disabled {
+  border-color: transparent;
+  background: transparent;
+  color: var(--text);
+  -webkit-text-fill-color: var(--text);
+  font-weight: 500;
+  opacity: 1;
+}
+
+#schedule-btn { height: 32px; margin: 0; }
+.btn.tonal { background: var(--tonal); color: var(--on-tonal); }
+.btn.tonal:hover {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px 1px rgba(0, 0, 0, 0.15);
+}
+/* The same button cancels the scheduled stop: outlined instead of tonal. */
+body[data-scheduled="true"] #schedule-btn {
+  background: transparent;
+  border-color: var(--outline);
+  color: var(--primary);
+  box-shadow: none;
+}
+body[data-scheduled="true"] #schedule-btn:hover { background: var(--state-layer); }
+
+#schedule-note {
+  margin: 8px 0 0;
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 16px;
+  text-align: center;
+}
+body:not([data-scheduled="true"]) #schedule-note { display: none; }
+
+#error { margin: 8px 0 0; color: var(--danger); }
+#error:empty { display: none; }
+#hint { margin: 8px 0 0; color: var(--text-secondary); font-size: 12px; line-height: 16px; }
