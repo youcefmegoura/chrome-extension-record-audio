@@ -33,13 +33,28 @@ export const Status = Object.freeze({
   SAVING: 'saving',
 });
 
+/**
+ * The state published by the service worker and rendered by the popup.
+ *
+ * @typedef {object} RecorderState
+ * @property {'idle' | 'recording' | 'saving'} status
+ * @property {boolean} hear whether the user hears the tab while it is recorded
+ * @property {number} autoStopSeconds the duration last chosen for the automatic stop
+ * @property {number | null} [stopAt] when the recording stops by itself (ms
+ *   since epoch), or null; only present while recording
+ * @property {string} [error] the last failure, until the user's next action
+ */
+
 export function describeError(err) {
   return err instanceof Error ? err.message : String(err);
 }
 
-/** Sends a message and resolves with the receiver's response. */
+/**
+ * Sends a message and resolves with the receiver's response. The payload
+ * travels under its own key, so that it cannot clash with the routing fields.
+ */
 export function send(target, type, payload = {}) {
-  return chrome.runtime.sendMessage({ ...payload, target, type });
+  return chrome.runtime.sendMessage({ target, type, payload });
 }
 
 /** Sends a message without caring whether anyone is there to receive it. */
@@ -49,8 +64,8 @@ export function notify(target, type, payload) {
 
 /**
  * Routes the messages addressed to `target` to `handlers`, keyed by message
- * type. A handler's return value is the response; if it throws, the response
- * is `{ error: <message> }`.
+ * type. A handler receives the message payload; its return value is the
+ * response, and if it throws, the response is `{ error: <message> }`.
  */
 export function listen(target, handlers) {
   chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
@@ -58,7 +73,7 @@ export function listen(target, handlers) {
     if (!handler) return false;
 
     Promise.resolve()
-      .then(() => handler(message))
+      .then(() => handler(message.payload ?? {}))
       .catch((err) => {
         console.error(`Handling "${message.type}" failed:`, err);
         return { error: describeError(err) };
