@@ -127,8 +127,12 @@ async function request(type, payload) {
 }
 
 async function startRecording() {
-  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-  await request(MessageType.START, { tabId: tab?.id });
+  try {
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    await request(MessageType.START, { tabId: tab?.id });
+  } catch (err) {
+    render({ ...state, error: describeError(err) });
+  }
 }
 
 // The schedule button is a toggle. The duration counts from the click; the
