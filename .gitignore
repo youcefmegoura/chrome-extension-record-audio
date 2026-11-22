@@ -5,6 +5,7 @@
 *.crx
 *.pem
 *.zip
+dist/
 
 # Editors
 .idea/

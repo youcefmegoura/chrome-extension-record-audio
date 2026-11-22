@@ -1,0 +1,50 @@
+# Releases the extension with semantic-release on every push to main.
+# Source: https://semantic-release.gitbook.io/semantic-release/recipes/ci-configurations/github-actions
+#
+# semantic-release reads the Conventional Commits made since the last release
+# (configuration in .releaserc.json) and, if any of them calls for one:
+#   - computes the next version (fix: patch, feat: minor, breaking change: major)
+#   - writes it to manifest.json and packages dist/tab-audio-recorder.zip
+#   - commits manifest.json back to main and tags the release
+#   - publishes a GitHub release with generated notes and the zip
+#
+# The zip keeps the same name in every release, so the download button in the
+# README always serves the latest version.
+
+name: Release
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write # push the version commit and the tag, create the release
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0 # semantic-release needs the whole history and its tags
+      - uses: actions/setup-node@v7
+        with:
+          node-version: lts/*
+      - run: node scripts/validate.mjs
+      - run: node --test
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        # Run with npx so that the repository stays free of dependencies; the
+        # versions are pinned here and are not updated by Dependabot.
+        run: >
+          npx --yes
+          --package semantic-release@25.0.9
+          --package @semantic-release/exec@7.1.0
+          --package @semantic-release/git@11.0.1
+          semantic-release

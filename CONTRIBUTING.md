@@ -40,8 +40,36 @@ Open an issue and include:
   idle. Use `chrome.storage` instead.
 - Use [Conventional Commits](https://www.conventionalcommits.org/) for commit
   messages, for example `fix: keep the popup in sync after a failed download`.
+  The type matters: releases are cut automatically from it (see
+  [Releasing](#releasing)), so do not edit the version in `manifest.json` by
+  hand.
 - A new permission in `manifest.json` needs a justification in the pull
   request and in the README.
+
+## Releasing
+
+Releases are automatic: there is no version to edit and no tag to push. On
+every push to `main`, the [release workflow](.github/workflows/release.yml)
+runs [semantic-release](https://semantic-release.gitbook.io/), which reads the
+commits made since the last release and decides the next version:
+
+| Commit                                         | Release                |
+| ---------------------------------------------- | ---------------------- |
+| `fix: ...`                                     | patch (1.3.0 to 1.3.1) |
+| `feat: ...`                                    | minor (1.3.0 to 1.4.0) |
+| `feat!: ...` or a `BREAKING CHANGE:` footer    | major (1.3.0 to 2.0.0) |
+| `docs:`, `refactor:`, `test:`, `ci:`, `chore:` | none                   |
+
+It then writes the version to `manifest.json`, commits it to `main`, tags it,
+and publishes a GitHub release with generated notes and the packaged
+extension, which the download button of the README serves.
+
+semantic-release only runs in CI, through `npx`, so the repository still has
+no dependencies. To build the same archive locally (requires `zip`):
+
+```sh
+node scripts/package.mjs
+```
 
 ## License
 

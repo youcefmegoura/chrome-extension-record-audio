@@ -1,0 +1,21 @@
+{
+  "branches": ["main"],
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/release-notes-generator",
+    [
+      "@semantic-release/exec",
+      { "prepareCmd": "node scripts/package.mjs ${nextRelease.version}" }
+    ],
+    ["@semantic-release/git", { "assets": ["manifest.json"] }],
+    [
+      "@semantic-release/github",
+      {
+        "assets": [{ "path": "dist/tab-audio-recorder.zip" }],
+        "successComment": false,
+        "failComment": false,
+        "releasedLabels": false
+      }
+    ]
+  ]
+}
